@@ -36,7 +36,7 @@
 #include <ArduinoP13.h>
 
 #define MAP_MAXX   1150
-#define MAP_MAXY    610
+#define MAP_MAXY    609
 
 const char *tleName = "ISS (ZARYA)";
 const char *tlel1   = "1 25544U 98067A   19132.94086806  .00001341  00000-0  28838-4 0  9999";
@@ -82,12 +82,12 @@ int          iySUN    = 0;           // Map pixel coordinate y of sun
 
 char         acBuffer[20];            // Buffer for ASCII time
 
-int          aiSatFP[32][2];          // array for storing the foorprint map coordinates
-
+int          aiSatFP[32][2];          // Array for storing the satellite footprint map coordinates
+int          aiSunFP[32][2];          // Array for storing the sunlight footprint map coordinates
 
 void setup()
 {
-  // Arduino UNO doens't support Serial.printf, so comment out those lines and put the parts for UNO in
+  // Arduino UNO doesn't support Serial.printf, so comment out those lines and put the parts for UNO in
   /* For UNO
   char buf[80]; 
   */
@@ -134,7 +134,7 @@ void setup()
   Serial.print(") Az: ");
   Serial.print(dSatAZ,2);
   Serial.print(" El: ");
-  Serial.println(dSatEL,2);
+  Serial.println(dSatEL,2); Serial.println("");
   */
   Serial.printf("%s -> Lat: %.4f Lon: %.4f (MAP %dx%d: x = %d,y = %d) Az: %.2f El: %.2f\r\n\r\n", acBuffer, dSatLAT, dSatLON, MAP_MAXX, MAP_MAXY, ixSAT, iySAT, dSatAZ, dSatEL);
 
@@ -147,8 +147,8 @@ void setup()
   Serial.printf("RX: %.6f MHz, TX: %.6f MHz\r\n\r\n", MySAT.doppler(dfreqRX, P13_FRX), MySAT.doppler(dfreqTX, P13_FTX));
  
   // Calcualte footprint
-  // Serial.println("Footprint map coordinates:");
-  Serial.printf("Footprint map coordinates:\n\r");
+  // Serial.println("Satellite footprint map coordinates:");
+  Serial.printf("Satellite footprint map coordinates:\n\r");
   
   MySAT.footprint(aiSatFP, (sizeof(aiSatFP)/sizeof(int)/2), MAP_MAXX, MAP_MAXY, dSatLAT, dSatLON);
   
@@ -188,9 +188,27 @@ void setup()
   Serial.print(") Az: ");
   Serial.print(dSunAZ,2);
   Serial.print(" El: ");
-  Serial.println(dSunEL,2);
+  Serial.println(dSunEL,2); Serial.println("");
   */
-  Serial.printf("\r\nSun -> Lat: %.4f Lon: %.4f (MAP %dx%d: x = %d,y = %d) Az: %.2f El: %.2f\r\n", dSunLAT, dSunLON, MAP_MAXX, MAP_MAXY, ixSUN, iySUN, dSunAZ, dSunEL);
+  Serial.printf("\r\nSun -> Lat: %.4f Lon: %.4f (MAP %dx%d: x = %d,y = %d) Az: %.2f El: %.2f\r\n\r\n", dSunLAT, dSunLON, MAP_MAXX, MAP_MAXY, ixSUN, iySUN, dSunAZ, dSunEL);
+
+  // Calcualte sunlight footprint
+  // Serial.println("Sunlight footprint map coordinates:");
+  Serial.printf("Sunlight footprint map coordinates:\n\r");
+  
+  Sun.footprint(aiSunFP, (sizeof(aiSunFP)/sizeof(int)/2), MAP_MAXX, MAP_MAXY, dSunLAT, dSunLON);
+  
+  for (i = 0; i < (sizeof(aiSunFP)/sizeof(int)/2); i++)
+  {
+    /* For UNO instead of Serial.printf
+    Serial.print(i);
+    Serial.print(": x = ");
+    Serial.print(aiSunFP[i][0]);
+    Serial.print(", y = ");
+    Serial.println(aiSunFP[i][1]);
+    */
+    Serial.printf("%2d: x = %d, y = %d\r\n", i, aiSunFP[i][0], aiSunFP[i][1]);
+  }
 
   // Serial.println(""); Serial.println("Finished.");
   Serial.printf("\r\nFinished\n\r");

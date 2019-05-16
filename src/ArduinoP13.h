@@ -50,6 +50,7 @@
 // - Inserted explicit casts
 // - Added a method "footprint" to class P13Satellite
 // - Added a method "doppler" to calculate down- and uplink frequencies
+// - Added a method "footprint" to class P13Sun
 //
 //----------------------------------------------------------------------
 
@@ -100,6 +101,8 @@ static const double CNS = cos(INS);				// -"-
 static const double SNS = sin(INS);				// -"-
 static const double EQC1 = 0.03340;				// Sun's Equation of centre terms
 static const double EQC2 = 0.00035;				// -"-
+
+static const double AU = 149.597870700E6;		// 1 AU, mean range in km to the sun
 
 //----------------------------------------------------------------------
 
@@ -191,7 +194,7 @@ private:
     double PC;
     double QD, WD, DC;
 
-    double RS;		
+    double RS;		// Radius of satellite orbit
 	double RR;		// Range rate for doppler calculation
 
 };
@@ -210,6 +213,7 @@ public:
     void predict(const P13DateTime &dt);
  	void latlon(double &lat, double &lon);
 	void elaz(const P13Observer &obs, double &el, double &az);
+	void footprint(int points[][2], int numberofpoints, const int MapMaxX, const int MapMaxY, double &sunlat, double &sunlon);
 };
 
 #endif	// Arduino_P13_H

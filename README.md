@@ -1,5 +1,7 @@
 # ArduinoP13
-Arduino Plan13 C++ library originally authored by Mark VandeWettering K6HX (https://github.com/brainwagon/angst/tree/master/P13) from the BBC BASIC implementation "PLAN13" of J.R. Miller G3RUH (http://www.amsat.org/amsat/articles/g3ruh/111.html). Compact and modular port to smaller processors including the Atmel AVR chips.
+Arduino Plan13 C++ library originally ported by Mark VandeWettering K6HX (https://github.com/brainwagon/angst/tree/master/P13) from the BASIC implementation "PLAN13" of J.R. Miller G3RUH (http://www.amsat.org/amsat/articles/g3ruh/111.html). Compact and modular port to smaller processors including the Atmel AVR chips.
+
+Suggestions for implementing P13Sun::elaz() are welcome.
 
 Tested with ESP32 (AZ-Delivery ESP32DevKitC) and Arduino UNO.
 

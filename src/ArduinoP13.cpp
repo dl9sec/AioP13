@@ -50,6 +50,7 @@
 // - Inserted explicit casts
 // - Added a method "footprint" to class P13Satellite
 // - Added a method "doppler" to calculate down- and uplink frequencies
+// - Added a method "footprint" to class P13Sun
 //
 //----------------------------------------------------------------------
 
@@ -654,5 +655,58 @@ void P13Sun::elaz(const P13Observer &obs, double &el, double &az) {
 	// ToDo:
 	// Convert the celestial coordinates SUN[] to
 	// azimuth and elevation of an observer.
+
+}
+
+
+// Generates the sunlight footprint at satlat/satlon and calculates rectangular
+// x/y coordinates scaled to a map with size MapMaxX/MapMaxY. The coordinates are stored
+// in a two dimensional array. points[n][0] stores x and points[n][1] stores y.
+// The coordinates can be concatenated with lines to create a footprint outline.
+//
+// This is a simplified aproach with no real calculation of the distance to the sun at a
+// specific time. It is assumed that the nearest and farest distance of the sun makes almost no
+// difference in footprint radius, it is always almost 0.5*PI. Therefore one astronomical
+// unit is used for the distance. The same algorithm is used as for the satellite footprint
+// except, that RS is replaced by AU.
+
+void P13Sun::footprint(int points[][2], int numberofpoints, const int MapMaxX, const int MapMaxY, double &sunlat, double &sunlon) {
+
+	int i;
+	
+	double srad;
+	double cla, sla, clo, slo;
+	double sra, cra;
+	
+	double a, x, y, z, Xfp, Yfp, Zfp;
+	
+		
+	srad = acos(RE / AU);	// Radius of sunlight footprint circle
+	sra  = sin(srad);		// Sin/Cos these to save time
+	cra  = cos(srad);
+
+	cla  = cos(radians(sunlat));
+	sla  = sin(radians(sunlat));
+	clo  = cos(radians(sunlon));
+	slo  = sin(radians(sunlon));
+	
+	for ( i = 0; i < numberofpoints ; i++)	// "numberofpoints" points to the circle
+	{
+		a = 2.0 * PI * (double)i / (double)numberofpoints;	// Angle around the circle
+		Xfp = cra;											// Circle of points centred on Lat=0, Lon=0
+		Yfp = sra * sin(a);									// assuming Earth's radius = 1
+		Zfp = sra * cos(a);
+		
+		x   = Xfp * cla - Zfp * sla;						// Rotate point "up" by latitude "sunlat"
+		y   = Yfp;											// -"-
+		z   = Xfp * sla + Zfp * cla;						// -"-
+		
+		Xfp = x * clo - y * slo;							// Rotate point "around" through longitude "sunlon"
+		Yfp = x * slo + y * clo;							// -"-
+		Zfp = z;											// -"-
+		
+		// Convert point to Lat/Lon and convert/scale to a pixel map
+		latlon2xy(points[i][0], points[i][1], degrees(asin(Zfp)), degrees(atan2(Yfp,Xfp)), MapMaxX, MapMaxY);
+	}
 
 }

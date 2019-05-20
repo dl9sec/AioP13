@@ -194,7 +194,7 @@ void P13DateTime::settime(int year, int month, int day, int h, int m, int s) {
     TN = ((double)h + (double)m / 60.0 + (double)s / 3600.0) / 24.0;
 }
 
-//OK
+
 void P13DateTime::gettime(int &year, int &month, int &day, int &h, int &m, int &s) {
 	
 	double t;
@@ -211,7 +211,7 @@ void P13DateTime::gettime(int &year, int &month, int &day, int &h, int &m, int &
     s  = (int)(t);
 }
 
-//OK
+
 void P13DateTime::ascii(char *buf) {
 	
     int year, mon, day;

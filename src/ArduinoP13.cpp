@@ -208,7 +208,7 @@ void P13DateTime::gettime(int &year, int &month, int &day, int &h, int &m, int &
     m  = (int)t;
     t -= (double)m ;
     t *= 60.0;
-    s  = (int)(t + 0.5);	// Round up for better accuracy at reverse calculation TN -> h:m:s
+    s  = (int)(t);
 }
 
 //OK

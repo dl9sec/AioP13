@@ -11,6 +11,6 @@ Tested with ESP32 (AZ-Delivery ESP32DevKitC) and Arduino UNO.
 
 <dl>
   <dt>PredictISS</dt>
-  <dd>A prediction example for the ISS with output to the console (ESP32 and Arduino Uno).</dd>
+  <dd>A prediction example for the ISS with output to the console (ESP32 and Arduino UNO).</dd>
   <dt>PredictISSVGAsimple</dt>
   <dd>A simple prediction example (nothing moving or dynamic, just a snapshot for a specific date/time) based on "PredictISS" for the ISS on a ESP32 with output to VGA using FabGL by fdivitto (https://github.com/fdivitto/fabgl). See the docs folder of the example for further information about connecting to a VGA female connector.</dd>

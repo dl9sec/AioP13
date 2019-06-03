@@ -17,6 +17,6 @@ Tested with ESP32 (AZ-Delivery ESP32DevKitC) and Arduino UNO.
   ![alt Screenshot of PredictVGAISSsimple](https://github.com/dl9sec/ArduinoP13/raw/master/examples/PredictISSVGAsimple/docs/PredictISSVGAsimple_small.png)
     
    <dt>PredictAnalemmaVGA</dt>
-  <dd>A simple analemma (https://en.wikipedia.org/wiki/Analemma) prediction example (nothing moving or dynamic) on an ESP32 with output to VGA (512x384@60Hz) using FabGL by fdivitto (https://github.com/fdivitto/fabgl) for checking the sun's prediction algorithm. See the docs folder of the example for further information about connecting to a VGA female connector.</dd>
+  <dd>A simple analemma (https://en.wikipedia.org/wiki/Analemma) prediction example (nothing moving or dynamic) on an ESP32 with output to VGA (512x384@60Hz) using FabGL by fdivitto (https://github.com/fdivitto/fabgl) for checking the prediction algorithm for  the sun. See the docs folder of the example for further information about connecting to a VGA female connector.</dd>
   
   ![alt Screenshot of PredictAnalemmaVGA](https://github.com/dl9sec/ArduinoP13/raw/master/examples/PredictAnalemmaVGA/docs/PredictAnalemmaVGA_small.png) 

@@ -1,0 +1,3 @@
+python img2bitmap.py sun_15x15.png -t 0 0 > Sun_15x15.h
+python img2bitmap.py worldmap_1_512x256.png -d > worldmap_1_512x256.h
+python img2bitmap.py worldmap_2_512x256.png -d > worldmap_2_512x256.h

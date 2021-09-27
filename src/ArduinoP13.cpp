@@ -51,11 +51,11 @@
 // - Added a method "footprint" to class P13Satellite
 // - Added a method "doppler" to calculate down- and uplink frequencies
 // - Added a method "footprint" to class P13Sun
-// - Added imolementation suggestion for P13Sun:elaz() by Uwe Nagel
+// - Added implementation suggestion for P13Sun::elaz() by Uwe Nagel
 //
 // Uwe Nagel (09/2021)
 //
-// - Implementation of P13Sun:elaz()
+// - Implementation of P13Sun::elaz()
 //
 //----------------------------------------------------------------------
 

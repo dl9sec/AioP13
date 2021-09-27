@@ -25,7 +25,7 @@
 //
 // =====================================================================
 //
-// dl9sec@gmx.net (02..05/2019):
+// dl9sec@gmx.net (02..09/2021):
 //
 // The original Plan13 BBC Basic source code can be found at:
 //
@@ -51,6 +51,11 @@
 // - Added a method "footprint" to class P13Satellite
 // - Added a method "doppler" to calculate down- and uplink frequencies
 // - Added a method "footprint" to class P13Sun
+// - Added implementation suggestion for P13Sun:elaz() by Uwe Nagel
+//
+// Uwe Nagel (09/2021)
+//
+// - Implementation of P13Sun:elaz()
 //
 //----------------------------------------------------------------------
 
@@ -63,8 +68,8 @@
   #include "WProgram.h"
 #endif
 
-#define P13_FRX	0
-#define P13_FTX	1
+#define P13_FRX 0
+#define P13_FTX 1
 
 
 static long fnday(int y, int m, int d);
@@ -78,31 +83,31 @@ void latlon2xy(int &x, int &y, double lat, double lon, const int MapMaxX, const 
 // here are a bunch of constants that will be used throughout the 
 // code, but which will probably not be helpful outside.
 
-static const double RE = 6378.137;				// WGS-84 Earth ellipsoid
-static const double FL = 1.0 / 298.257224;		// -"-
-static const double RP = RE * (1.0 - FL);		// -
+static const double RE   = 6378.137;            // WGS-84 Earth ellipsoid
+static const double FL   = 1.0 / 298.257224;    // -"-
+static const double RP   = RE * (1.0 - FL);     // -
 
-static const double GM = 3.986E5;				// Earth's Gravitational constant km^3/s^2
-static const double J2 = 1.08263E-3;			// 2nd Zonal coeff, Earth's Gravity Field
+static const double GM   = 3.986E5;             // Earth's Gravitational constant km^3/s^2
+static const double J2   = 1.08263E-3;          // 2nd Zonal coeff, Earth's Gravity Field
 
-static const double YM = 365.25;				// Mean Year,     days
-static const double YT = 365.2421874;			// Tropical year, days
-static const double WW = 2.0 * PI / YT; 		// Earth's rotation rate, rads/whole day
-static const double WE = 2.0 * PI + WW;			// Earth's rotation rate, radians/day 
-static const double W0 = WE / 86400.0;			// Earth's rotation rate, radians/sec
+static const double YM   = 365.25;              // Mean Year,     days
+static const double YT   = 365.2421874;         // Tropical year, days
+static const double WW   = 2.0 * PI / YT;       // Earth's rotation rate, rads/whole day
+static const double WE   = 2.0 * PI + WW;       // Earth's rotation rate, radians/day 
+static const double W0   = WE / 86400.0;        // Earth's rotation rate, radians/sec
 
 // Sidereal and Solar data. Rarely needs changing. Valid to year ~2030
-static const double YG = 2014.0;				// GHAA, Year YG, Jan 0.0
-static const double G0 = 99.5828;				// -"-
-static const double MAS0 = 356.4105;			// MA Sun and rate, deg, deg/day
-static const double MASD = 0.98560028;			// -"-
-static const double INS = radians(23.4375);		// Sun's inclination
-static const double CNS = cos(INS);				// -"-
-static const double SNS = sin(INS);				// -"-
-static const double EQC1 = 0.03340;				// Sun's Equation of centre terms
-static const double EQC2 = 0.00035;				// -"-
+static const double YG   = 2014.0;              // GHAA, Year YG, Jan 0.0
+static const double G0   = 99.5828;             // -"-
+static const double MAS0 = 356.4105;            // MA Sun and rate, deg, deg/day
+static const double MASD = 0.98560028;          // -"-
+static const double INS  = radians(23.4375);    // Sun's inclination
+static const double CNS  = cos(INS);            // -"-
+static const double SNS  = sin(INS);            // -"-
+static const double EQC1 = 0.03340;             // Sun's Equation of centre terms
+static const double EQC2 = 0.00035;             // -"-
 
-static const double AU = 149.597870700E6;		// 1 AU, mean range in km to the sun
+static const double AU   = 149.597870700E6;     // 1 AU, mean range in km to the sun
 
 //----------------------------------------------------------------------
 
@@ -118,19 +123,19 @@ typedef double Vec3[3];
 class P13DateTime {
 
 public:
-	long   DN;
- 	double TN;
-	
-   	P13DateTime();
-	P13DateTime(const P13DateTime &);
-	P13DateTime(int year, int month, int day, int h, int m, int s);
-	~P13DateTime();
-	
-	void add(double);
-   	void settime(int year, int month, int day, int h, int m, int s);
+    long   DN;
+    double TN;
+    
+    P13DateTime();
+    P13DateTime(const P13DateTime &);
+    P13DateTime(int year, int month, int day, int h, int m, int s);
+    ~P13DateTime();
+    
+    void add(double);
+    void settime(int year, int month, int day, int h, int m, int s);
     void gettime(int& year, int& mon, int& day, int& h, int& m, int& s);
     void ascii(char *);
-	void roundup(double);
+    void roundup(double);
 };
 
 
@@ -143,7 +148,7 @@ public:
     double LA;
     double LO;
     double HT;
-	
+    
     Vec3 U, E, N, O, V;
     
     P13Observer(const char *nm, double lat, double lon, double asl);
@@ -157,45 +162,45 @@ class P13Satellite {
 
 public:
     const char *name;
-	
-	Vec3 SAT, VEL;		// Celestial coordinates
-    Vec3 S, V; 			// Geocentric coordinates
+    
+    Vec3 SAT, VEL;      // Celestial coordinates
+    Vec3 S, V;          // Geocentric coordinates
  
-	P13Satellite(const char *name, const char *l1, const char *l2);
-	~P13Satellite();
-	
+    P13Satellite(const char *name, const char *l1, const char *l2);
+    ~P13Satellite();
+    
     void   tle(const char *name, const char *l1, const char *l2);
     void   predict(const P13DateTime &dt);
- 	void   latlon(double &lat, double &lon);
-	void   elaz(const P13Observer &obs, double &el, double &az);
-	void   footprint(int points[][2], int numberofpoints, const int MapMaxX, const int MapMaxY, double &satlat, double &satlon);
-	double doppler(double freqMHz, bool dir);
+    void   latlon(double &lat, double &lon);
+    void   elaz(const P13Observer &obs, double &el, double &az);
+    void   footprint(int points[][2], int numberofpoints, const int MapMaxX, const int MapMaxY, double &satlat, double &satlon);
+    double doppler(double freqMHz, bool dir);
 
 private:
-  	long   N;		// Satellite calaog number
-	long   YE;		// Epoch Year    			year
-	double TE;		// Epoch time    			days
-	double IN;		// Inclination   			deg
-	double RA;		// R.A.A.N.      			deg
-	double EC;		// Eccentricity  			 -
-	double WP;		// Arg perigee   			deg
-	double MA;		// Mean anomaly  			deg
-	double MM;		// Mean motion   			rev/d
-	double M2;		// Decay Rate    			rev/d/d
-	double RV;		// Orbit number  			 -
-	double ALON;	// Sat attitude				deg
-	double ALAT;	// Sat attitude				deg
-    long   DE;		// Epoch Fraction of day
-	
-	// These values are stored, but could be calculated on the fly during calls to predict() 
-	// Classic space/time tradeoff
+    long   N;       // Satellite calaog number
+    long   YE;      // Epoch Year               year
+    double TE;      // Epoch time               days
+    double IN;      // Inclination              deg
+    double RA;      // R.A.A.N.                 deg
+    double EC;      // Eccentricity              -
+    double WP;      // Arg perigee              deg
+    double MA;      // Mean anomaly             deg
+    double MM;      // Mean motion              rev/d
+    double M2;      // Decay Rate               rev/d/d
+    double RV;      // Orbit number              -
+    double ALON;    // Sat attitude             deg
+    double ALAT;    // Sat attitude             deg
+    long   DE;      // Epoch Fraction of day
+    
+    // These values are stored, but could be calculated on the fly during calls to predict() 
+    // Classic space/time tradeoff
 
     double N0, A_0, B_0;
     double PC;
     double QD, WD, DC;
 
-    double RS;		// Radius of satellite orbit
-	double RR;		// Range rate for doppler calculation
+    double RS;      // Radius of satellite orbit
+    double RR;      // Range rate for doppler calculation
 
 };
 
@@ -205,15 +210,15 @@ private:
 class P13Sun {
 
 public:
-	Vec3 SUN, H;
-	
-	P13Sun();
-	~P13Sun();
-	
+    Vec3 SUN, H;
+    
+    P13Sun();
+    ~P13Sun();
+    
     void predict(const P13DateTime &dt);
- 	void latlon(double &lat, double &lon);
-	void elaz(const P13Observer &obs, double &el, double &az);
-	void footprint(int points[][2], int numberofpoints, const int MapMaxX, const int MapMaxY, double &sunlat, double &sunlon);
+    void latlon(double &lat, double &lon);
+    void elaz(const P13Observer &obs, double &el, double &az);
+    void footprint(int points[][2], int numberofpoints, const int MapMaxX, const int MapMaxY, double &sunlat, double &sunlon);
 };
 
-#endif	// Arduino_P13_H
+#endif  // Arduino_P13_H

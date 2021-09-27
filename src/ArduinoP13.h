@@ -41,9 +41,9 @@
 // - Renamed all classes to P13... for consistency and clarification of
 //   affiliation.
 // - Some code beautification.
-// - Fixed missing semicolon at destructor of P13DateTime.
-// - Added comments for constants and TLE data.
-// - Updated sidereal and solar data to values valid until ~2030
+// - Changed output of method "ascii" to ISO date format
+// - Added helper function for converting lat/lon coordinates to rectangular
+//   map coordinates
 // - Used all double
 // - Used PI instead of M_PI
 // - Used degrees() and radians() instead of DEGREES() and RADIANS()
@@ -51,11 +51,6 @@
 // - Added a method "footprint" to class P13Satellite
 // - Added a method "doppler" to calculate down- and uplink frequencies
 // - Added a method "footprint" to class P13Sun
-// - Added implementation suggestion for P13Sun:elaz() by Uwe Nagel
-//
-// Uwe Nagel (09/2021)
-//
-// - Implementation of P13Sun:elaz()
 //
 //----------------------------------------------------------------------
 

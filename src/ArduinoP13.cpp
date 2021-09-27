@@ -41,9 +41,9 @@
 // - Renamed all classes to P13... for consistency and clarification of
 //   affiliation.
 // - Some code beautification.
-// - Fixed missing semicolon at destructor of P13DateTime.
-// - Added comments for constants and TLE data.
-// - Updated sidereal and solar data to values valid until ~2030
+// - Changed output of method "ascii" to ISO date format
+// - Added helper function for converting lat/lon coordinates to rectangular
+//   map coordinates
 // - Used all double
 // - Used PI instead of M_PI
 // - Used degrees() and radians() instead of DEGREES() and RADIANS()

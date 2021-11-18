@@ -13,12 +13,12 @@ Tested with M5Stack Core Basic, ODROID-GO and Arduino UNO.
   <dd>A prediction example for the ISS with output to the console (ESP32 and Arduino UNO).</dd>
 
   <dt>PredictISS_TFT</dt>
-  <dd>A simple prediction example (nothing moving or dynamic, just a snapshot for a specific date/time) based on "PredictISS" for the ISS on an ESP32 with output to a TFT (M5Stack, ODROID-GO and others) using the [ESP32-Chimera-Core by tobozo](https://github.com/tobozo/ESP32-Chimera-Core) as a multi-platform alternative to the original M5Stack library.</dd>
+  <dd>A simple prediction example (nothing moving or dynamic, just a snapshot for a specific date/time) based on "PredictISS" for the ISS on an ESP32 with output to a TFT (M5Stack, ODROID-GO and others) using the "ESP32-Chimera-Core" by tobozo (https://github.com/tobozo/ESP32-Chimera-Core) as a multi-platform alternative to the original M5Stack library.</dd>
   
   <img src="images/PredictISS_TFT.png" alt="PredictISS_TFT screenshot" width="100%" height="100%">
       
    <dt>PredictAnalemma_TFT</dt>
-  <dd>A simple analemma (https://en.wikipedia.org/wiki/Analemma) prediction example (nothing moving or dynamic) on an ESP32 with output to a TFT (M5Stack, ODROID-GO and others) using the [ESP32-Chimera-Core by tobozo](https://github.com/tobozo/ESP32-Chimera-Core) as a multi-platform alternative to the original M5Stack library for checking the prediction algorithm for the sun.</dd>
+  <dd>A simple analemma (https://en.wikipedia.org/wiki/Analemma) prediction example (nothing moving or dynamic) on an ESP32 with output to a TFT (M5Stack, ODROID-GO and others) using the "ESP32-Chimera-Core" by tobozo (https://github.com/tobozo/ESP32-Chimera-Core) as a multi-platform alternative to the original M5Stack library for checking the prediction algorithm for the sun.</dd>
   
   <img src="images/PredictAnalemma_TFT.png" alt="PredictAnalemma_TFT.png screenshot" width="100%" height="100%"> 
 </dl>

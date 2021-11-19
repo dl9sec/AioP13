@@ -1,5 +1,5 @@
 # AioP13
-"**A**nother **i**mplementation **o**f **P**lan**13**" C++ library originally ported by Mark VandeWettering K6HX (https://github.com/brainwagon/angst/tree/master/P13) from the BASIC implementation "PLAN13" of J.R. Miller G3RUH (http://www.amsat.org/amsat/articles/g3ruh/111.html). Compact and modular port to smaller processors including the Atmel AVR chips.
+"**A**nother **i**mplementation **o**f **P**lan**13**" C++ library for satellite and sun prediction, originally ported by Mark VandeWettering K6HX (https://github.com/brainwagon/angst/tree/master/P13) from the BASIC implementation "PLAN13" of J.R. Miller G3RUH (http://www.amsat.org/amsat/articles/g3ruh/111.html). Compact and modular port to smaller processors including the Atmel AVR chips.
 
 (I renamed the whole stuff from ArduinoP13 to AioP13 to follow the "Arduino Library Specifications" for naming of libraries. There also was a complete rework nescessary because of a variable name conflict with one of the latest ESP32 core libraries, so all variables got a qualifier to get more or less unique names. In some cases this is very ugly, so all the variables should be renamed to speaking and useful names in one of the next releases. But all seems to work fine so far, including Uwe Nagel's implementation for the suns elevetion and azimuth calculations, thanks again!)
 

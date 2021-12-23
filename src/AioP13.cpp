@@ -273,9 +273,6 @@ P13Observer::P13Observer(const char *p_ccnm, double p_dlat, double p_dlon, doubl
     double l_dRz;
     
     uint8_t len = strlen(p_ccnm)%256;
-    if (c_ccObsName) {
-        delete c_ccObsName;
-    }
     c_ccObsName = new char[len+1];
     strncpy(c_ccObsName, p_ccnm, len);
     c_ccObsName[len] = '\0';
@@ -331,7 +328,7 @@ P13Observer::~P13Observer() {
 //----------------------------------------------------------------------
 
 P13Satellite::P13Satellite(const char *p_ccnm, const char *p_ccl1, const char *p_ccl2) {
-    
+    c_ccSatName = nullptr;
     tle(p_ccnm, p_ccl1, p_ccl2);
 }
 

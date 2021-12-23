@@ -88,7 +88,7 @@ int          iySAT    = 0;           // Map pixel coordinate y of satellite
 int          ixSUN    = 0;           // Map pixel coordinate x of sun
 int          iySUN    = 0;           // Map pixel coordinate y of sun
 
-char         acBuffer[20];            // Buffer for ASCII time
+char         acBuffer[P13DateTime::ascii_str_len + 1]; // Buffer for ASCII time
 
 int          aiSatFP[32][2];          // Array for storing the satellite footprint map coordinates
 int          aiSunFP[32][2];          // Array for storing the sunlight footprint map coordinates

@@ -79,11 +79,6 @@
 #define P13_FRX 0
 #define P13_FTX 1
 
-
-static long fnday(int p_iy, int p_im, int p_id);
-static void fndate(int &p_iy, int &p_im, int &p_id, long p_idt);
-static double getdouble(const char *p_ccc, int p_ii0, int p_ii1);
-static long getlong(const char *p_ccc, int p_ii0, int p_ii1);
 void latlon2xy(int &p_ix, int &l_iy, double p_dlat, double p_dlon, const int p_ciMapMaxX, const int p_ciMapMaxY);
 
 //----------------------------------------------------------------------
@@ -131,6 +126,8 @@ typedef double Vec3[3];
 class P13DateTime {
 
 public:
+    const static uint8_t ascii_str_len = 19;
+
     long   c_lDN;
     double c_dTN;
     
@@ -152,7 +149,7 @@ public:
 class P13Observer {
 
 public:
-    const char *c_ccObsName;
+    char *c_ccObsName;
     double c_dLA;
     double c_dLO;
     double c_dHT;
@@ -169,7 +166,7 @@ public:
 class P13Satellite { 
 
 public:
-    const char *c_ccSatName;
+    char *c_ccSatName;
     
     Vec3 c_vecSAT, c_vecVEL;      // Celestial coordinates
     Vec3 c_vecS, c_vecV;          // Geocentric coordinates
@@ -183,6 +180,7 @@ public:
     void   elaz(const P13Observer &p_obs, double &p_del, double &p_daz);
     void   footprint(int p_aipoints[][2], int p_inumberofpoints, const int p_ciMapMaxX, const int p_ciMapMaxY, double &p_dsatlat, double &p_dsatlon);
     double doppler(double p_dfreqMHz, bool p_bodir);
+    double dopplerOffset(double p_dfreqMHz);
 
 private:
     long   cp_lN;       // Satellite calaog number

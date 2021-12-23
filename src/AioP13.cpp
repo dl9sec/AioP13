@@ -70,6 +70,13 @@
 //
 // - Implementation of P13Sun:elaz()
 //
+// Mark Smith @SmittyHalibut (12/2021)
+//
+// - Added some helper constants, cleaned up compiler warnings.
+// - Copy Observer and Satellite name strings instead of assuming 
+//   the source is always there.
+// - Added `dopplerOffset()`
+//
 //----------------------------------------------------------------------
 
 #include "AioP13.h"
@@ -265,7 +272,14 @@ P13Observer::P13Observer(const char *p_ccnm, double p_dlat, double p_dlon, doubl
     double l_dRx;
     double l_dRz;
     
-    this->c_ccObsName = p_ccnm;
+    uint8_t len = strlen(p_ccnm)%256;
+    if (c_ccObsName) {
+        delete c_ccObsName;
+    }
+    c_ccObsName = new char[len+1];
+    strncpy(c_ccObsName, p_ccnm, len);
+    c_ccObsName[len] = '\0';
+
     c_dLA = radians(p_dlat);
     c_dLO = radians(p_dlon);
     c_dHT = p_dasl / 1000.0;
@@ -303,7 +317,9 @@ P13Observer::P13Observer(const char *p_ccnm, double p_dlat, double p_dlon, doubl
 
 
 P13Observer::~P13Observer() {
-    
+    if (c_ccObsName) {
+        delete c_ccObsName;
+    }    
 }
 
 //----------------------------------------------------------------------
@@ -320,7 +336,9 @@ P13Satellite::P13Satellite(const char *p_ccnm, const char *p_ccl1, const char *p
 }
 
 P13Satellite::~P13Satellite() {
-    
+    if (c_ccSatName) {
+        delete c_ccSatName;
+    }
 }
 
 // Get satellite data from the TLE
@@ -329,7 +347,14 @@ void P13Satellite::tle(const char *p_ccnm, const char *p_ccl1, const char *p_ccl
     
     double l_dCI;
     
-    this->c_ccSatName = p_ccnm;
+    uint8_t len = strlen(p_ccnm)%256;
+    if (c_ccSatName) {
+        delete c_ccSatName;
+    }
+    c_ccSatName = new char[len+1];
+    strncpy(c_ccSatName, p_ccnm, len);
+    c_ccSatName[len] = '\0';
+
 
     // Direct quantities from the orbital elements
 
@@ -380,7 +405,7 @@ void P13Satellite::predict(const P13DateTime &p_dt) {
     double l_dTN;
     double l_dGHAE, l_dGHAA;
     double l_dT, l_dDT, l_dKD, l_dKDP;
-    double l_dM, l_dDR, l_dRN, l_dEA;
+    double l_dM, l_dDR, l_dEA;
     double l_dDNOM, l_dC_EA, l_dS_EA;
     double l_dA, l_dB, l_dD;
     double l_dAP, l_dCW, l_dSW;
@@ -404,9 +429,6 @@ void P13Satellite::predict(const P13DateTime &p_dt) {
     l_dM   = cp_dMA + cp_dMM * l_dT * (1.0 - 3.0 * l_dDT);   // Mean anomaly at YR,TN
     l_dDR  = (long)(l_dM / (2.0 * PI));                      // Strip out whole no of revs
     l_dM  -= l_dDR * 2.0 * PI;                               // M now in range 0..2PI
-    
-	//??
-	l_dRN  = cp_dRV + l_dDR;                                 // Current Orbit number
     
     // Solve M = EA - EC*SIN(EA) for EA given M, by Newton's Method
     l_dEA  = l_dM;                                           // Initial solution
@@ -578,13 +600,10 @@ void P13Satellite::footprint(int p_aipoints[][2], int p_inumberofpoints, const i
 
 }
 
-
 // Returns the RX (dir = 0 or P13_FRX) or TX (dir = 1 or P13_FTX) frequency with doppler shift.
 double P13Satellite::doppler(double p_dfreqMHz, bool p_bodir) {
     
-    double l_ddopplershift;    // Dopplershift in MHz
-    
-    l_ddopplershift = -p_dfreqMHz * cp_dRR / 299792.0;    //  Speed of light is 299792.0 km/s
+    double l_ddopplershift = dopplerOffset(p_dfreqMHz);
     
     if (p_bodir)  // TX
     {
@@ -599,12 +618,17 @@ double P13Satellite::doppler(double p_dfreqMHz, bool p_bodir) {
 
 }
 
+// Returns just the change in frequency, relative to the observer, due to doppler shift.
+double P13Satellite::dopplerOffset(double p_dfreqMHz) {
+    return -p_dfreqMHz * cp_dRR / 299792.0;    //  Speed of light is 299792.0 km/s
+}
+
 
 //----------------------------------------------------------------------
 //     _              ___  _ _______           
-//  __| |__ _ ______ | _ \/ |__ / __|_  _ _ _  
-// / _| / _` (_-<_-< |  _/| ||_ \__ \ || | ' \ 
-// \__|_\__,_/__/__/ |_|  |_|___/___/\_,_|_||_|
+//  __| |__ _ ______ | _ \/ |__ / __|_  _ _  _  
+// / _| / _` (_-<_-< |  _/| ||_ \__ \ || | \| |
+// \__|_\__,_/__/__/ |_|  |_|___/___/\_,_|_|\_|
 //                                             
 //----------------------------------------------------------------------
 
